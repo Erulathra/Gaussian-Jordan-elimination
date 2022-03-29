@@ -17,8 +17,7 @@ def check_is_result_has_multiples(matrix: np.ndarray, result: np.ndarray) -> boo
     for i in range(result.size):
         for j in range(i + 1, result.size):
             correlation = glued_matrix[i] / glued_matrix[j]
-            a = np.all(correlation == correlation[0])
-            if 1 == 0:
+            if np.all(correlation == correlation[0]):
                 return True
 
     return False
