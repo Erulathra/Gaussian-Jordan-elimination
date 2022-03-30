@@ -1,12 +1,16 @@
 import numpy as np
 
 
-# czy trzeba macierz odwrotną w Jordanie;
-# czy trzeba umieć liczyć macierze nie kwadratowe;
-class EquationType:
-    unique = "Unique"
-    infinite = "Infinite"
-    none = "None"
+class NoneSolutionException(Exception):
+    pass
+
+
+class InfiniteSolutionException(Exception):
+    pass
+
+
+class WrongInputException(Exception):
+    pass
 
 
 def check_is_result_has_multiples(matrix: np.ndarray, result: np.ndarray) -> bool:
@@ -23,38 +27,46 @@ def check_is_result_has_multiples(matrix: np.ndarray, result: np.ndarray) -> boo
     return False
 
 
-def solve_matrix(matrix: np.ndarray) -> (EquationType, np.ndarray):
+def solve_matrix(matrix: np.ndarray) -> (np.ndarray, np.ndarray):
     matrix = np.array(matrix.copy())
 
-    result_vector: np.ndarray = matrix[:, -1]
+    # Split matrix to matrix and results_vector
+    results_vector: np.ndarray = matrix[:, -1]
     matrix: np.ndarray = np.delete(matrix, -1, axis=1)
 
-    if result_vector.shape[0] < matrix.shape[0]:
-        return EquationType.infinite
+    # Create identity matrix
+    reversed_matrix: np.ndarray = np.zeros(matrix.shape)
+    np.fill_diagonal(reversed_matrix, 1)
+
+    if results_vector.shape[0] < matrix.shape[0]:
+        raise InfiniteSolutionException
 
     if np.linalg.det(matrix) == 0:
-        if check_is_result_has_multiples(matrix, result_vector):
-            return EquationType.infinite, result_vector
+        if check_is_result_has_multiples(matrix, results_vector):
+            raise InfiniteSolutionException
         else:
-            return EquationType.none, result_vector
+            raise NoneSolutionException
 
     for i in range(matrix.shape[1]):
         factor = matrix[i, i]
 
         # Transform row to have one on diagonal
         matrix[i] /= factor
-        result_vector[i] /= factor
+        results_vector[i] /= factor
+        reversed_matrix[i] /= factor
         # Subtract this row from rest of the rows
         for j in range(i + 1, matrix.shape[1]):
             factor = matrix[j, i]
             matrix[j] -= matrix[i] * factor
-            result_vector[j] -= result_vector[i] * factor
+            results_vector[j] -= results_vector[i] * factor
+            reversed_matrix[j] -= reversed_matrix[i] * factor
 
     # Subtract rows from end to make matrix diagonal
     for i in range(matrix.shape[1])[::-1]:
         for j in range(i):
             factor = matrix[j, i]
             matrix[j] -= matrix[i] * factor
-            result_vector[j] -= result_vector[i] * factor
+            results_vector[j] -= results_vector[i] * factor
+            reversed_matrix[j] -= reversed_matrix[i] * factor
 
-    return EquationType.unique, result_vector
+    return results_vector, reversed_matrix
