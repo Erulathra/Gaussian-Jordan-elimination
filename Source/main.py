@@ -48,7 +48,7 @@ def main():
                 matrix = infinite_results_matrix
             case '4':
                 if 'path' not in locals():
-                    path = "file.csv"
+                    path = "przykladowe/i.csv"
                 path = input("Podaj ścieżkę ["+path+"]: ") or path
                 matrix = matrix_from_file(path)
             case 'q':
