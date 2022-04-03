@@ -9,12 +9,14 @@ def calculate_and_print_results(matrix):
         result = jordan.solve_matrix(matrix)
         print("Wynik:")
         print(result[0])
+        print("Macierz odwrócona:")
         print(result[1])
     except jordan.NoneSolutionException:
         print("Układ sprzeczny")
     except jordan.InfiniteSolutionException:
         print("Układ nieoznaczony")
     print()
+    input("Naciśnij Enter aby kontynuować")
 
 
 def main():
@@ -30,16 +32,17 @@ def main():
                                     [2, 5, 7, 20],
                                     [-4, -10, -14, -20]], float)
 
-    
     user_input = ""
+    path = "../przykladowe/e.csv"
     while user_input != "q":
         user_input = input('''Podaj, czy chcesz obliczyć rozwiązanie układu:
         (1) Oznaczonego
         (2) Sprzecznego
         (3) Nieoznaczonego
         (4) Własnego (wczytaj z pliku)
+        (5) Predefinowanego
         [q - wyjście]\n> ''')
-        match(user_input):
+        match user_input:
             case '1':
                 matrix = common_matrix
             case '2':
@@ -47,16 +50,16 @@ def main():
             case '3':
                 matrix = infinite_results_matrix
             case '4':
-                if 'path' not in locals():
-                    path = "przykladowe/i.csv"
-                path = input("Podaj ścieżkę ["+path+"]: ") or path
+                path = input(f"Podaj ścieżkę: ")
                 matrix = matrix_from_file(path)
+            case '5':
+                letter = input(f"Podaj przykład (a-j): ")
+                matrix = matrix_from_file(f"../przykladowe/{letter}.csv")
             case 'q':
                 break
             case _:
                 continue
         calculate_and_print_results(matrix)
-                
 
 
 if __name__ == '__main__':
