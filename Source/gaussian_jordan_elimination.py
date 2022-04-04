@@ -48,20 +48,13 @@ def solve_matrix(augmented_matrix: np.ndarray) -> (np.ndarray, np.ndarray):
 
 
 def check_if_matrix_has_solution(augmented_matrix, matrix):
-    # Check if matrix has solutions
+    # Check if matrix has solutions by comparing ranks
     matrix_rank = np.linalg.matrix_rank(matrix)
     augmented_matrix_rank = np.linalg.matrix_rank(augmented_matrix)
     if matrix_rank != augmented_matrix_rank:
         raise NoneSolutionException
     if matrix_rank == augmented_matrix_rank and matrix_rank < matrix.shape[1]:
         raise InfiniteSolutionException
-
-
-def zero_on_diagonal(matrix: np.ndarray) -> bool:
-    for i in range(matrix.shape[1]):
-        if (matrix[i, i]) == 0:
-            return True
-    return False
 
 
 def sort_for_pivots(matrix: np.ndarray, reversed_matrix: np.ndarray, results_vector: np.ndarray) \
