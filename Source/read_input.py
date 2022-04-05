@@ -1,6 +1,7 @@
 import numpy as np
 import csv
 
+
 def matrix_from_file(path) -> np.array:
     with open(path, "r") as csv_file:
         reader = csv.reader(csv_file)
@@ -8,6 +9,7 @@ def matrix_from_file(path) -> np.array:
         for line in reader:
             result.append([float(char) for char in line])
     return np.array(result, float)
+
 
 def matrix_from_user_input() -> np.array:
     string_matrix = input('''Wprowadź macierz, oddzielając pola spacjami, a linie średnikami, np:\n\

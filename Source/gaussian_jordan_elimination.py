@@ -8,6 +8,9 @@ def solve_matrix(augmented_matrix: np.ndarray) -> (np.ndarray, np.ndarray):
     results_vector: np.ndarray = augmented_matrix[:, -1]
     matrix: np.ndarray = np.delete(augmented_matrix, -1, axis=1)
 
+    # check is matrix square
+    if matrix.shape[0] != matrix.shape[1]:
+        raise WrongInputException
     check_if_matrix_has_solution(augmented_matrix, matrix)
 
     # Create identity matrix
@@ -55,6 +58,8 @@ def check_if_matrix_has_solution(augmented_matrix, matrix):
         raise NoneSolutionException
     if matrix_rank == augmented_matrix_rank and matrix_rank < matrix.shape[1]:
         raise InfiniteSolutionException
+    if np.linalg.det(matrix) == 0:
+        raise DeterminantIsZeroException
 
 
 def sort_for_pivots(matrix: np.ndarray, reversed_matrix: np.ndarray, results_vector: np.ndarray) \
@@ -78,4 +83,8 @@ class InfiniteSolutionException(Exception):
 
 
 class WrongInputException(Exception):
+    pass
+
+
+class DeterminantIsZeroException(Exception):
     pass
